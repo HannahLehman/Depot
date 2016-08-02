@@ -1,4 +1,4 @@
-require 'test_helper'
+  require 'test_helper'
 
 class ProductsControllerTest < ActionController::TestCase
   setup do
@@ -51,5 +51,24 @@ class ProductsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to products_path
+  end
+
+  test "should list product details" do
+    get :index
+    assert_response :success
+
+    assert_select "td", minimum: 3
+    assert_select "td img", minimum: 1
+    assert_select ".list_description", minimum: 1
+    assert_select ".list_actions a", minimum: 3
+  end
+
+  test "list actions should not contain empty links" do
+    get :index
+    assert_response :success
+
+    assert_select ".list_actions a" do
+      assert_select "[href=?]", /.+/
+    end
   end
 end
